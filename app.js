@@ -10,7 +10,7 @@ var pages=[["Services","index.html#services"],["Approach","index.html#process"],
 var cur=location.pathname.split('/').pop()||'index.html';
 $('#nav').innerHTML='<div class="wrap bar"><a href="index.html"><img src="images/logo.png" alt="Spacedrift Design Studio"></a><button id="mb" aria-label="Menu" aria-expanded="false">Menu</button><ul id="mu">'+pages.map(function(p){return'<li><a href="'+p[1]+'"'+(p[1]===cur?' aria-current="page"':'')+'>'+p[0]+'</a></li>'}).join('')+'</ul></div>';
 $('#mb').onclick=function(){var o=$('#mu').classList.toggle('open');this.setAttribute('aria-expanded',o)};
-$('#foot').innerHTML='<div class="wrap"><span>© '+new Date().getFullYear()+' Spacedrift Design Studio</span><span>'+pages.map(function(p){return'<a href="'+p[1]+'">'+p[0]+'</a>'}).join(' ')+'<a class="ig" href="'+IG+'" target="_blank" rel="noopener" aria-label="Spacedrift on Instagram">'+ICON+' Instagram</a></span></div>';
+$('#foot').innerHTML='<div class="wrap"><span>© '+new Date().getFullYear()+' Spacedrift Design Studio</span><span>'+pages.map(function(p){return'<a href="'+p[1]+'">'+p[0]+'</a>'}).join(' ')+'<a href="review.html">Leave a review</a><a class="ig" href="'+IG+'" target="_blank" rel="noopener" aria-label="Spacedrift on Instagram">'+ICON+' Instagram</a></span></div>';
 $$('[data-ig]').forEach(function(l){l.href=IG});
 window.addEventListener('scroll',function(){$('#nav').classList.toggle('sc',window.scrollY>20)},{passive:true});
 /* scroll reveal */
@@ -72,5 +72,34 @@ if(f)f.onsubmit=function(e){e.preventDefault();var fd=new FormData(f),btn=f.quer
 var mail=function(){location.href='mailto:'+f.dataset.to+'?subject='+encodeURIComponent('Project enquiry from '+fd.get('name'))+'&body='+encodeURIComponent('Name: '+fd.get('name')+'\nEmail: '+fd.get('email')+'\nInterested in: '+fd.get('need')+'\nLocation: '+fd.get('location')+'\n\n'+fd.get('message'));btn.disabled=false;btn.textContent='Send message'};
 if(!FORM){mail();return}
 fetch(FORM,{method:'POST',headers:{'Accept':'application/json'},body:fd}).then(function(r){if(!r.ok)throw 0;f.outerHTML='<div class="thanks" role="status"><h3>Thank you</h3><p>Your message is on its way. We will reply by email soon.</p></div>'}).catch(mail)};
+/* review form */
+var rf=$('#rf');
+if(rf)rf.onsubmit=function(e){e.preventDefault();var fd=new FormData(rf),btn=rf.querySelector('button');btn.disabled=true;btn.textContent='Sending...';
+var mail=function(){location.href='mailto:'+rf.dataset.to+'?subject='+encodeURIComponent('Review from '+fd.get('name'))+'&body='+encodeURIComponent('Name: '+fd.get('name')+'\nEmail: '+fd.get('email')+'\nProject: '+fd.get('project')+'\nRating: '+fd.get('rating')+'\n\n'+fd.get('review'));btn.disabled=false;btn.textContent='Submit review'};
+if(!FORM){mail();return}
+fetch(FORM,{method:'POST',headers:{'Accept':'application/json'},body:fd}).then(function(r){if(!r.ok)throw 0;rf.outerHTML='<div class="thanks" role="status"><h3>Thank you</h3><p>We have received your review. We read every one, and may share it on this site with your permission.</p></div>'}).catch(mail)};
+/* testimonials */
+var T=window.TESTIMONIALS||[],ts=$('#testimonials');
+if(ts&&!T.length)$('#tw').innerHTML='<h2>Share your experience</h2>';
+if(ts&&T.length){var esc=function(s){return String(s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})};
+$('#tw').innerHTML='<h2>Kind words</h2><div class="tq">'+T.map(function(t,i){return'<figure class="q'+(i?'':' on')+'"><blockquote>“'+esc(t.quote)+'”</blockquote><figcaption><b>'+esc(t.name)+'</b>'+(t.detail?'<span>'+esc(t.detail)+'</span>':'')+'</figcaption></figure>'}).join('')+'</div>'+(T.length>1?'<div class="dots" id="td" role="group" aria-label="Choose testimonial">'+T.map(function(t,i){return'<button aria-label="Testimonial '+(i+1)+'" aria-current="'+(i===0)+'"></button>'}).join('')+'</div>':'')+'';
+if(T.length>1){var ti=0,tt,qs=$$('.q',ts),tb=$$('#td button',ts);
+var tg=function(n){ti=(n+T.length)%T.length;qs.forEach(function(q,i){q.classList.toggle('on',i===ti)});tb.forEach(function(b,i){b.setAttribute('aria-current',i===ti)})};
+var tr=function(){clearInterval(tt);if(!reduce)tt=setInterval(function(){tg(ti+1)},7000)};
+$('#td').onclick=function(e){var i=tb.indexOf(e.target.closest('button'));if(i>-1){tg(i);tr()}};
+ts.onmouseenter=ts.onfocusin=function(){clearInterval(tt)};ts.onmouseleave=ts.onfocusout=tr;tr()}}
+/* section headings: words rise in on scroll, last word gets an underline sweep */
+if(!reduce)$$('section h2').forEach(function(h){var ws=h.textContent.trim().split(/\s+/);h.classList.add('sp');h.innerHTML=ws.map(function(w,i){return'<span class="wd'+(i===ws.length-1?' hl':'')+'" style="--i:'+i+'">'+w+'</span>'}).join(' ')});
+/* headline words rise in */
+if(!reduce)$$('.hero h1').forEach(function(h){h.innerHTML=h.textContent.trim().split(/\s+/).map(function(w,i){return'<span class="w" style="animation-delay:'+(i*90)+'ms">'+w+'</span>'}).join(' ')});
+/* typed services line (home hero) */
+var rt=$('#rot');
+if(rt&&!reduce){var W=['Interior design','Colour consultation','Bespoke design','Craftsmanship','Architectural design','Site supervision'],wi=0,ci=0,del=false,rounds=0;rt.classList.add('typing');
+var tick=function(){var w=W[wi];
+if(!del){ci++;rt.textContent=w.slice(0,ci);if(ci===w.length){del=true;return setTimeout(tick,1500)}return setTimeout(tick,55)}
+ci--;rt.textContent=w.slice(0,ci);
+if(ci===0){del=false;wi=(wi+1)%W.length;if(wi===0&&++rounds>=2){rt.textContent=W[0];rt.classList.remove('typing');return}return setTimeout(tick,250)}
+return setTimeout(tick,30)};
+rt.textContent='';setTimeout(tick,700)}
 reveal(document);
 })();

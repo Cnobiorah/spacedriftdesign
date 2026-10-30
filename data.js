@@ -7,3 +7,11 @@ window.PROJECTS=[
 {id:"p2",title:"Entry and feature wall",category:"Interior",type:"Completed interior",location:"Add location",year:"2026",desc:"A calm entry zone built around fluted wall panels, organic-shaped mirrors and a slim console with turned black legs, finished with a large textured vase and soft concealed lighting.",images:["interior-1233.jpg","interior-1232.jpg"]},
 {id:"p3",title:"Bedroom and kitchen",category:"Interior",type:"Completed interior",location:"Add location",year:"2026",desc:"A restful bedroom with timber wall panelling and a layered ceiling detail, paired with a clean L-shaped kitchen in warm timber and cream joinery with a veined stone splashback.",images:["interior-1235.jpg","interior-1237.jpg"]}
 ];
+
+/* Client testimonials on the home page. Delete the placeholders and add real, approved comments.
+   If this list is empty, the whole section is hidden. */
+window.TESTIMONIALS=[
+{quote:"Placeholder: replace this with a real comment from a client about working with Spacedrift.",name:"Client name",detail:"Project type, Location"},
+{quote:"Placeholder: a second client comment goes here. Keep it to a few sentences.",name:"Client name",detail:"Project type, Location"},
+{quote:"Placeholder: a third client comment goes here.",name:"Client name",detail:"Project type, Location"}
+];
